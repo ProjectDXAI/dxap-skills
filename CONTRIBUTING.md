@@ -50,7 +50,10 @@ portfolio/order tasks select `dxap-trading`, and hosted-agent monitoring,
 troubleshooting, or configuration tasks select `dxap-agent-manager`. Resolve
 ambiguous agent type before writes; hosted trades go to the website.
 A research-only connection must remain sufficient for news, curated X summaries,
-and technical analysis. REST alone must support the manager workflow.
+and technical analysis. Hosted management uses REST for all operations, including
+listing, creating, and canceling directives. Settings creates general account REST keys;
+external-agent MCP keys come from the agent's Connection panel. Do not recommend
+MCP scopes for hosted supervision or a research-key creation option in Settings.
 
 Connection verification should use reads. A paper execution test requires a
 selected paper account and an authorized action. Keep account observations and

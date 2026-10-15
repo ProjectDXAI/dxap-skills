@@ -5,18 +5,19 @@ research tools.
 
 ## Choose the connection
 
-| Use | MCP URL | Credential scopes |
-| --- | --- | --- |
-| News, curated X summaries, and technical analysis | `https://mcp.dxap.ai/mcp` | `use:mcp:public` |
-| Research through an existing external trading connection | `https://mcp.dxap.ai/mcp` | `use:mcp:external` and `read:external:market_data` |
+For an external agent, reuse its MCP connection at `https://mcp.dxap.ai/mcp` with
+`use:mcp:external` and `read:external:market_data`. Create the key from the
+external agent's **Connection → Connect agent** panel after the agent and its
+paper or live account exist on DXAP. A second research connection is unnecessary.
 
-For standalone research, sign in to DXAP and create an API key with the Public
-MCP preset or `use:mcp:public` scope. A trading agent or execution account is not
-required. The external trading connection requires a key bound to an external
-agent and its selected account; reuse it when the user already has one configured.
-Both credential types use the same `/mcp` URL. The credential selects the tool
-catalog; its scopes grant the available capabilities. External credentials use
-`use:mcp:external` rather than `use:mcp:public` and cannot combine account scopes.
+An existing research-only account key with `use:mcp:public` can still use the
+same endpoint for news, curated X summaries, and technical analysis without a
+trading account. This is support for an already provisioned research connection,
+not a separate setup option in Settings. Do not combine account and external scopes.
+
+Settings → API keys creates general account REST keys with selected permissions. Those keys
+do not grant MCP research access. Hosted monitoring, settings, schedules, and
+directives use account REST; do not send hosted management through this skill.
 
 Use `https://mcp.dxap.ai/mcp` for production unless the user explicitly configures
 a different DXAP environment.

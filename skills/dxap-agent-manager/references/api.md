@@ -1,7 +1,7 @@
 # Hosted management API
 
 All paths below are relative to the account REST base in [setup](setup.md).
-REST fields use camelCase; directive MCP arguments use snake_case. Use the
+REST fields use camelCase. Use the
 current [OpenAPI schema](https://api.dxap.ai/openapi.json) for complete shapes.
 This reference covers the operations used by this skill.
 
@@ -25,17 +25,6 @@ Configuration history accepts `limit`, `before`, and `includeSnapshots`. Use the
 returned `nextCursor` as the next request's `before`; do not construct cursors.
 Preview has its own request schema: map the relevant editable fields rather than
 posting an entire agent response.
-
-MCP equivalents exist for directives:
-
-| Tool | Required inputs |
-| --- | --- |
-| `list_agent_directives` | `agent_id` |
-| `create_agent_directive` | `agent_id`, `instruction`, `lifecycle_type`, and lifecycle-specific fields |
-| `cancel_agent_directive` | `agent_id`, `directive_id` |
-
-MCP also requires `use:mcp:public`. Tool names may carry a harness prefix.
-Read both text and structured results, including any tool error.
 
 ## Schedules and monitoring
 

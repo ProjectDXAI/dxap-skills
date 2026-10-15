@@ -5,49 +5,49 @@ perpetual trading through an external agent, and hosted-agent supervision.
 The skills follow the [Agent Skills standard](https://agentskills.io/specification) and work with
 Codex, Claude Code, or a custom harness that loads Markdown instructions.
 
-| Skill | Use it for | Account access |
+| Skill | Use it for | Connection and key setup |
 | --- | --- | --- |
-| [dxap-research](skills/dxap-research/SKILL.md) | News, article follow-up, curated X commentary, and technical analysis | Public MCP API key; no trading account required |
-| [dxap-trading](skills/dxap-trading/SKILL.md) | Portfolio review, authorized trades, order management, and receipt recovery for an external agent created on DXAP | API key bound to that external agent and its paper or live account |
-| [dxap-agent-manager](skills/dxap-agent-manager/SKILL.md) | Monitor, troubleshoot, and configure hosted agents, including settings, directives, and schedules | User API key with the required account read/write scopes; REST access |
-
-`dxap-trading` requires an external agent created on DXAP. Hosted-agent trade
-requests and manually forced turns belong on the DXAP website; the manager skill
-does not create trade proposals, submit orders, or force turns.
+| [dxap-agent-manager](skills/dxap-agent-manager/SKILL.md) | Monitor, troubleshoot, and configure hosted agents, including directives and schedules | REST; select account permissions on a key created in Settings → API keys |
+| [dxap-trading](skills/dxap-trading/SKILL.md) | Portfolio review, authorized trades, order management, and receipt recovery for an external agent created on DXAP | MCP; create a bound key on that agent's Connection panel |
+| [dxap-research](skills/dxap-research/SKILL.md) | News, article follow-up, curated X commentary, and technical analysis | Research tools on the external agent's MCP connection, or an existing research-only MCP connection |
 
 ## Connect
 
-For research, create a DXAP API key with `use:mcp:public`, configure the research
-connection, and install `dxap-research`. Start with: “Use DXAP research to summarize
-BTC news and curated X commentary from the past day, with sources.” See
-[research setup](skills/dxap-research/references/setup.md).
-
-For trading, create an external agent on DXAP with a selected paper or live
-account and issue a key bound to both. Configure the trading connection and
-install `dxap-trading`. Start with: “Show my account mode, portfolio, trading
-limits, and recent actions. Do not submit orders.” See
-[trading setup](skills/dxap-trading/references/setup.md).
-
-For hosted-agent management, configure account REST access with the read scopes
-needed for monitoring. Add agent/trigger write scopes for authorized changes.
+**Hosted-agent management uses REST.** Create a key in **Settings → API keys**
+and select the account read/write permissions needed for the task. These are
+general account API keys for any API client or integration, not agent-bound keys
+or assistant-specific credentials. The manager skill uses their account REST
+permissions and retains the user's target-agent boundaries. Monitoring needs
+read permissions; configuration changes need the relevant write permissions.
+No MCP connection or MCP permission is required for this workflow.
 Install `dxap-agent-manager` and start with: “Inspect my hosted agent's settings,
 schedule, and recent activity. Explain any issues without changing anything.”
-See [manager setup](skills/dxap-agent-manager/references/setup.md). MCP is optional
-for directive operations; the complete manager workflow uses REST.
+See [manager setup](skills/dxap-agent-manager/references/setup.md).
 
-| Interface | Address |
+**External agents connect through MCP.** Create an external agent on DXAP with a
+selected paper or live account, then use its **Connection → Connect agent** panel.
+The key is bound to that agent and account. Create and manage these keys on the
+agent page, not in Settings. Install `dxap-trading` and start with: “Show my account
+mode, portfolio, trading limits, and recent actions. Do not submit orders.”
+See [trading setup](skills/dxap-trading/references/setup.md).
+
+For market research, reuse the external connection with market-data permission
+and install `dxap-research`. Start with: “Summarize BTC news and curated X
+commentary from the past day, with sources.” Existing research-only MCP keys
+remain supported; see [research setup](skills/dxap-research/references/setup.md).
+
+| Workflow | Address |
 | --- | --- |
-| MCP (research, account directives, or external trading by credential) | `https://mcp.dxap.ai/mcp` |
-| Trading REST | `https://api.dxap.ai/api/v1/account/external-agent` |
-| Hosted management REST | `https://api.dxap.ai/api/v1/account` |
+| Hosted management REST, including all directive operations | `https://api.dxap.ai/api/v1/account` |
+| External-agent MCP | `https://mcp.dxap.ai/mcp` |
+| Optional external-agent REST for custom clients and receipt recovery | `https://api.dxap.ai/api/v1/account/external-agent` |
 | REST schema | `https://api.dxap.ai/openapi.json` |
 
-All MCP clients use the same URL. Account keys use `use:mcp:public`; keys bound
-to external agents use `use:mcp:external`. Additional scopes determine the tools
-available to each credential. The two transport scopes are not interchangeable.
-
-Use `https://mcp.dxap.ai/mcp` for production unless explicitly configuring a
-different DXAP environment.
+Hosted-agent trade requests and manually forced turns belong on the DXAP website.
+The manager skill does not create trade proposals, submit orders, or force turns.
+External-agent trading requires an external agent created on DXAP, its bound key,
+and the user's trading authorization. Installing a skill grants neither access
+nor trading permission.
 
 ## Install a skill
 
@@ -103,7 +103,7 @@ continuity. Installing a skill does not start a recurring watch.
 - [REST API](skills/dxap-trading/references/rest-api.md): route mapping, examples, and pagination.
 - [Order lifecycle](skills/dxap-trading/references/order-lifecycle.md): uncertain outcomes, revisions, and protection.
 - [Agent manager](skills/dxap-agent-manager/SKILL.md): hosted supervision and authorized management.
-- [Manager setup](skills/dxap-agent-manager/references/setup.md): REST access, scopes, and optional MCP directives.
+- [Manager setup](skills/dxap-agent-manager/references/setup.md): REST access, account permissions, and directive routes.
 - [Management API](skills/dxap-agent-manager/references/api.md): configuration and monitoring routes.
 - [Settings and directives](skills/dxap-agent-manager/references/management.md): safe updates, lifecycles, schedules, and recovery.
 - [Monitoring](skills/dxap-agent-manager/references/monitoring.md): diagnosis, evidence, and recurring supervision.

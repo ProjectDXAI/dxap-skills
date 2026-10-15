@@ -1,9 +1,9 @@
 ---
 name: dxap-agent-manager
-description: Monitor, troubleshoot, and manage hosted DXAP agents from a local harness through REST and available MCP tools. Review activity, explain failures or inactivity, and manage settings, directives, and schedules. Hosted trade requests and manually forced turns belong on the DXAP website.
+description: Monitor, troubleshoot, and manage hosted DXAP agents from a local harness through REST. Review activity, explain failures or inactivity, and manage settings, directives, and schedules. Hosted trade requests and manually forced turns belong on the DXAP website.
 license: MIT
 metadata:
-  version: "0.1.1"
+  version: "0.1.2"
 ---
 
 # DXAP agent manager
@@ -28,11 +28,13 @@ to trade for it.
 
 ## Connect and identify the agent
 
-Use the configured account REST client. Read [setup](references/setup.md) for
-credentials or connection issues and [API reference](references/api.md) for
-routes and result fields. Public MCP supports directive operations; REST is
-needed for the complete management workflow. Consult the current OpenAPI schema
-and available MCP definitions for exact fields.
+Use the configured account REST client at `https://api.dxap.ai/api/v1/account`.
+Create the management key in Settings → API keys. This workflow
+uses REST for monitoring, settings, schedules, and all directive operations;
+it does not require an MCP connection or MCP permissions.
+Read [setup](references/setup.md) for credentials or connection issues and
+[API reference](references/api.md) for routes and result fields. Consult the
+current OpenAPI schema for exact fields.
 
 1. Read `GET /agents`, resolve the requested agent by returned ID, and fetch
    `GET /agents/{agentID}`. Confirm `runtimeMode: hosted`. Resolve duplicate
