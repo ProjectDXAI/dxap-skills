@@ -110,19 +110,6 @@ continuity. Installing a skill does not start a recurring watch.
 - [Maintainer guidance](CONTRIBUTING.md): compatibility checks and public content conventions.
 - [Behavioral scenarios](evals/scenarios.md): offline checks for all three skills.
 
-## Replacing the earlier skill
-
-This is the successor to `dxap-skill` for externally managed trading. The earlier
-`dxap-hyperagent-api` skill covered hosted agent management, chat, and triggers.
-Use `dxap-trading` for an identity with `runtime_mode: external`. Remove the old
-skill from that trading workspace if it is no longer needed. Existing broad
-account keys must be replaced with credentials bound to the external agent and
-its account; installing this skill does not change a key's scopes.
-
-Use `dxap-agent-manager` for hosted monitoring, troubleshooting, and settings
-management. Its scope excludes trade creation and manually forced turns, even
-when an older skill or a configured credential exposes those operations.
-
 ## License
 
 [MIT](LICENSE).
