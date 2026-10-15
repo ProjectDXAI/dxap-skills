@@ -10,11 +10,24 @@ capabilities. Work with an existing hosted agent created on DXAP.
 - Authentication: `Authorization: Bearer <API key>`.
 - JSON writes: `Content-Type: application/json`.
 
-Use a user API key issued through DXAP's signed-in API-key flow. Select concrete
-scopes for the requested operations. An external-agent trading credential is
-bound to a different workflow and cannot substitute for an account management
-key. Management scopes are user-scoped, not restricted to the selected agent;
-the harness must retain the user's target-agent boundaries.
+In **Settings → API keys → Create API key**, select the account permissions
+needed for the task. Name the key, choose its expiration, sign the request, and
+save the token in the client's secret configuration. No permissions are selected
+by default. This setup uses REST; it does not require MCP permissions.
+
+Settings issues general account API keys for API clients and integrations. A key
+is limited by its selected permissions and is not bound to an individual agent.
+This skill uses that account access for hosted-agent supervision; the API key
+itself is not limited to assistants or hosted-agent management. Retain the user's
+target-agent boundaries on every operation.
+
+Select only the read permissions needed for monitoring. Add
+`write:account:agents` for authorized configuration or directive changes and
+`write:account:triggers` for schedule changes. The table below maps operations
+to permissions; it is not an automatically granted preset.
+
+External-agent trading uses a different credential bound to an agent and account.
+Create that key on the external agent's Connection panel, not in Settings.
 
 | Scope | When needed |
 | --- | --- |
@@ -52,26 +65,23 @@ Select the intended returned ID, read its details, and verify
 Install the complete skill folder and configure REST access separately; installing
 Markdown does not create a REST client or grant account access.
 
-## Optional MCP connection
+## Directives through REST
 
-Public MCP at `https://mcp.dxap.ai/mcp` uses Streamable HTTP with Bearer API-key
-authentication. Add `use:mcp:public` plus `read:account:agents` for directive
-reads and `write:account:agents` for directive changes. Discover tools after
-connecting; the relevant tools are `list_agent_directives`,
-`create_agent_directive`, and `cancel_agent_directive`.
+Use the same account REST connection and management key for all directive operations:
 
-Use the production MCP address above unless the user explicitly configures a
-different DXAP environment. REST supports all three directive operations and does not require `use:mcp:public`. A research-only MCP
-key does not grant agent access. External-agent credentials connect to the same
-`/mcp` URL but select their bound trading catalog and cannot access hosted
-management tools. The credential, rather than the URL, selects the available
-capabilities. Account directive tools are available on the public service
-independently of the hosted runtime.
+- `GET /agents/{agentID}/directives` to list active directives.
+- `POST /agents/{agentID}/directives` to create authorized guidance for future turns.
+- `DELETE /agents/{agentID}/directives/{directiveID}` to cancel a directive.
+
+Reading requires `read:account:agents`; creating or canceling requires
+`write:account:agents`. Follow [management](management.md) for lifecycle fields,
+verification, and recovery. Use these REST routes even if another configured
+connection exposes directive tools.
 
 ## Connection failures
 
 - `401`: verify the process receives an unexpired, unrevoked key; do not log it.
-- `403` or missing MCP tools: verify the route/transport scopes. Continue useful
+- `403`: verify the required account scope for the REST route. Continue useful
   permitted reads and identify the missing capability; do not substitute another
   account or broader credential automatically.
 - `404`: recheck the returned resource ID and ownership using the agent list.

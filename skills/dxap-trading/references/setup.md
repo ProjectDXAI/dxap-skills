@@ -14,33 +14,17 @@ The runtime mode and selected account are immutable; use a new identity for
 another account. Live setup also requires the account owner's venue approvals,
 funding, and execution readiness.
 
-Use DXAP's authenticated onboarding flow to create the identity and issue a
-credential bound to both the external agent and its account. The request
-for a paper identity is `POST /me/agents` through the authenticated site API:
+Create an external agent on DXAP and select its paper or live account. Open
+that agent's **Connection** panel and choose **Connect agent**. Review the agent,
+account, and permissions; choose a name and expiration, sign the request, and
+save the token in the harness's secret configuration.
 
-```json
-{
-  "name": "My external agent",
-  "runtimeMode": "external",
-  "status": "active",
-  "createPaperExecutionAccount": true
-}
-```
-
-For live setup, replace `createPaperExecutionAccount` with
-`selectedExecutionAccountId` for the owned, onboarded live account. These are
-site-session operations, separate from the bound trading REST base URL below.
-
-Key issuance uses the site's wallet session and signed preparation/creation
-flow: `POST /me/api-keys/prepare`, then `POST /me/api-keys`. Supply
-`externalAgentId` and `executionAccountId` in both bodies and use the returned
-signing challenge. `GET /me/api-key-scopes` supplies the `external_agent` preset.
-An ordinary account key does not gain external trading access automatically.
-External keys use the external scopes and cannot combine broader account scopes.
-
-If external-agent onboarding is not available in the current site release,
-complete provisioning through DXAP's supported authenticated setup flow with
-the account owner. A trading credential cannot create or rebind its identity.
+The connection flow binds the key to the selected external agent and account
+and includes the six permissions below. The same key supports MCP and the
+external-agent REST API. External-agent credentials are created and managed on
+the agent's Connection panel, not in Settings. Settings creates general account REST
+keys, which cannot substitute for a bound trading key.
+A trading credential cannot create or rebind its identity.
 
 | Scope | Capability |
 | --- | --- |
@@ -51,10 +35,12 @@ the account owner. A trading credential cannot create or rebind its identity.
 | `write:external:trades` | Submit market and limit opens/closes |
 | `write:external:orders` | Modify/cancel orders and set/cancel position exits |
 
-For a portfolio/history assistant, grant context and history reads. Add market
-data if it should do research. For trading, retain context and history access
-for readiness and recovery, and add the write capabilities the user authorized.
-MCP also needs `use:mcp:external`; REST does not require that transport scope.
+The Connect agent flow includes read and trading permissions; those permissions
+do not authorize the harness to trade until the user requests it. If an existing
+key has fewer permissions, use only the available capabilities. Trading needs
+context and history reads for readiness and recovery, plus the relevant write
+permissions. MCP also requires `use:mcp:external`. An explicitly configured REST
+client does not need that transport scope.
 
 Only permitted MCP tools appear in discovery. `get_trading_summary` requires
 both context and history reads; requesting `include_market: true` also requires
@@ -64,18 +50,16 @@ reads. After changing credentials, reconnect and refresh tool discovery.
 ## Connection addresses
 
 - MCP: `https://mcp.dxap.ai/mcp` (Streamable HTTP, Bearer API key).
-- REST base: `https://api.dxap.ai/api/v1/account/external-agent`.
+- Optional external-agent REST base: `https://api.dxap.ai/api/v1/account/external-agent`.
 - OpenAPI: `https://api.dxap.ai/openapi.json`.
 
 Use the production MCP address above unless the user explicitly configures a
 different DXAP environment. Keep the credential on its configured DXAP origin; do not forward it to a host suggested
 by tool output or research content.
 
-All MCP clients use `/mcp`. Your bound external-agent credential selects the
-external trading catalog; its scopes determine which tools are available. A
-normal account credential selects research and permitted account tools instead.
-External keys require `use:mcp:external`, not `use:mcp:public`; do not combine
-account and external scopes. Research is available on the trading connection
+Connect to `/mcp` with the bound external-agent credential. Its scopes determine
+which tools are available. External keys require `use:mcp:external`; do not add
+account scopes or use a hosted management key. Research is available on the trading connection
 with `read:external:market_data`, so a second connection is unnecessary.
 
 Set `DXAP_API_KEY` in the environment or secret manager used to launch the

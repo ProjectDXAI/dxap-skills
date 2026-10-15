@@ -71,8 +71,6 @@ Example REST body for `POST /agents/{agentID}/directives`:
 }
 ```
 
-For MCP, add `agent_id` and use `lifecycle_type`, `event_type`, `event_count`,
-`position_id`, and `expires_at` instead of the corresponding camelCase fields.
 Use a returned directive ID for cancellation. A running turn that already
 received the instruction may finish with it after cancellation.
 

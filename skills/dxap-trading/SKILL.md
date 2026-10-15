@@ -1,9 +1,9 @@
 ---
 name: dxap-trading
-description: Trade through a local harness using an external agent created on DXAP and its bound paper or live account. Review positions, execute authorized perpetual trades, manage orders, and recover action receipts through MCP or REST. Requires a DXAP external agent; hosted-agent trades belong on the DXAP website.
+description: Trade through a local harness using an external agent created on DXAP and its bound paper or live account. Review positions, execute authorized perpetual trades, manage orders, and recover action receipts through MCP. Requires a DXAP external agent; hosted-agent trades belong on the DXAP website.
 license: MIT
 metadata:
-  version: "0.4.0"
+  version: "0.4.1"
 ---
 
 # DXAP trading
@@ -19,11 +19,16 @@ action receipts and order outcomes.
 
 ## Connect and establish scope
 
-Use the configured MCP connection at `https://mcp.dxap.ai/mcp` or REST client.
-The bound external-agent credential selects the trading tools. For connection,
-credential, or missing-tool issues, read [setup](references/setup.md). For HTTP
-calls or a custom client, read [REST API](references/rest-api.md). Use the current
-tool definitions or OpenAPI schema for exact input and output shapes.
+Use the external agent's MCP connection at `https://mcp.dxap.ai/mcp`. Create its
+key from that agent's **Connection → Connect agent** panel, after selecting its
+paper or live account. External-agent keys are not created in Settings.
+The key is bound to that agent and account; it cannot manage hosted agents.
+
+For connection, credential, or missing-tool issues, read [setup](references/setup.md).
+For an explicitly configured REST client or action recovery over REST, read
+[REST API](references/rest-api.md). That optional transport uses the same bound
+external key and authorization; it is separate from hosted management REST.
+Use current tool definitions or OpenAPI for exact input and output shapes.
 
 Follow the user's requested task and existing trading authorization. A request
 for a report authorizes reads. A trading task may include standing authorization;

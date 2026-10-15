@@ -23,8 +23,12 @@ trading, and hosted-agent management.
   Hosted trade requests, trade proposals, order/protection mutations, and forced
   turns belong on the DXAP website. Do not route around that boundary through
   chat, directives, triggers, or schedule/status edits.
-- Keep standalone research usable with a Public MCP key. Do not require a trading
-  identity or assume that every MCP connection offers the same tools.
+- Keep connection setup distinct: hosted-agent management uses account REST and
+  keys from Settings → API keys; external agents use MCP and keys
+  from their own Connection panel. Do not recommend MCP setup for hosted management.
+- Research reuses the external MCP connection with market-data permission. Existing
+  research-only MCP keys remain usable without a trading identity; do not advertise
+  a research-key creation option in Settings or mix account and external scopes.
 - Include only public product concepts and synthetic examples. Never copy keys,
   account observations, private URLs, operational fixtures, or local paths into
   the package.

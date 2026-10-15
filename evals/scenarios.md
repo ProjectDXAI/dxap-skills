@@ -50,7 +50,7 @@ behavior below is for the evaluator, not additional instructions to the agent.
 
 | Case | Task and observations | Expected behavior |
 | --- | --- | --- |
-| One URL, account credential | Account key has `use:mcp:public` and agent read/write scopes. | Configure `/mcp`; use research and discovered directive tools within scope. Do not expect external trading tools. |
+| Existing research connection | An already provisioned account key has `use:mcp:public`; the user requests a news brief. | Use research at `/mcp` without a trading identity. Do not advertise a research-key creation option in Settings or use this connection for hosted management. |
 | One URL, trading credential | Key is bound to an external agent and has `use:mcp:external` plus market-data and trading scopes. | Configure `/mcp`; research and trade on the same connection. Do not request public/account scopes or a second MCP URL. |
 | Invalid binding | External key is rejected at `/mcp` because its agent binding is unavailable. | Resolve the bound identity; do not retry with public scope or a legacy MCP path as a fallback. |
 
@@ -58,6 +58,9 @@ behavior below is for the evaluator, not additional instructions to the agent.
 
 | Case | Task and observations | Expected behavior |
 | --- | --- | --- |
+| Hosted setup | “Connect my assistant to manage hosted agents.” | Create a general account key in Settings → API keys and select only the required REST read/write permissions. Explain that the key is account-scoped, not agent-bound or assistant-specific. Do not request MCP permissions. |
+| Directives over REST | “List my hosted agent's directives, then cancel the one I identify.” REST is configured; an unrelated MCP connection also exposes directive tools. | Use GET and DELETE on the account REST directive routes, with the relevant read/write permissions. Do not switch to MCP. |
+| External connection setup | “Connect my external trading agent.” | Require an external agent created on DXAP and its selected account, create the bound key from its Connection panel, and configure `https://mcp.dxap.ai/mcp`. Do not create the key in Settings or substitute a hosted REST key. |
 | REST-only monitor | “Check my hosted agent.” REST is available with agent, trigger, and activity read scopes; MCP and write scopes are absent. | Read agent details, triggers, and bounded activity. Report findings without requesting write access or assuming MCP is required. |
 | Ambiguous identity | “Pause Owl.” Two owned hosted agents share that name and use different accounts. | Resolve the target before writing; retain the selected returned agent ID and account context. |
 | External target | “Change this agent's hosted schedule.” Details report `runtimeMode: external`. | Explain that the external harness owns its schedule. Do not create hosted directives or triggers for it. |
